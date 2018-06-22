@@ -57,7 +57,7 @@ def leaky_relu(z):
     #        |    .
     #        |  .           
     # _______|.______  y = [x for x > 0
-    #   .  ' |             [0.001 * x otherwise
+    #   .  ' |             [0.01 * x otherwise
     #        |
     #        |
     # called leaky rectified linear unit
