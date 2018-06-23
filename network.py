@@ -1,5 +1,12 @@
 import numpy as np
-import activation
+from activation import *
+
+# activations = {
+#     "sigmoid": activation.sigmoid,
+#     "tanh": activation.tanh,
+#     "relu": activation.relu,
+#     "leaky_relu": activation.leaky_relu
+# }
 
 def initialize_parameters(layer_dims):
     # initislizes weights(w) and biases(b) for the network
@@ -42,3 +49,38 @@ def linear_activation_forward(A_prev, W, b, activation_func):
     A = activation_func(Z)
 
     return A
+
+def forward_propagate(X, parameters, activation_funcs):
+    # calculates the activations for each layer
+    # returns the actication for the final layer
+    #
+    # input:
+    #   - X:            vector of training or test data, dimension: [#input_features X #training_or_test_data]
+    #   - parametest:   dictionary containing the the vectors of W, b, for each layers
+    #   - activation_funcs:  list of string denoting the activation functions for each layer [1 - L]
+    #
+    # output:
+    #   - AL:           activation vector of the last layer
+
+    # calculate the number of layers in the network
+    # note that num_layers = len(layer_dims) - 1
+    # because we do not count the input layer as an actual network layer
+    L = len(parameters) // 2
+    
+    # make sure #layers == len(activations)
+    assert(L == len(activation_funcs))
+
+    A = X
+
+    for l in range(1, L + 1):
+        # iterate through 1 to L for each layer
+        # retrieve parameters from the dictionary
+        W = parameters["W" + str(l)]
+        b = parameters["b" + str(l)]
+        # retrieve activation function from the dictionary
+        activation_func = activations.get(activation_funcs[l-1])
+
+        A = linear_activation_forward(A, W, b, activation_func)
+
+    AL = A
+    return AL

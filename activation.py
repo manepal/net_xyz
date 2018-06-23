@@ -39,7 +39,7 @@ def tanh_prime(z):
 def relu(z):
     #        |    .
     #        |  .           
-    # _______|.______  y = [x for x > 0
+    # __.....|.______  y = [x for x > 0
     #        |             [0 otherwise
     #        |
     #        |
@@ -72,3 +72,11 @@ def leaky_relu_prime(z):
         return 1
     else:
         return 0.01
+
+# dictionary containing the mapping for activation functions to their string names
+activations = {
+    "sigmoid": sigmoid,
+    "tanh": tanh,
+    "relu": relu,
+    "leaky_relu": leaky_relu
+}
