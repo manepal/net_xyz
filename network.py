@@ -1,4 +1,5 @@
 import numpy as np
+import activation
 
 def initialize_parameters(layer_dims):
     # initislizes weights(w) and biases(b) for the network
@@ -19,17 +20,25 @@ def initialize_parameters(layer_dims):
         # we start from index 1, because the first layer is input layer and does not need weights and biases
 
         # dimension for weights matrix is [#neurons_in_current_layer X #neurons_in_previous_layer]
-        parameters["W" + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1])
+        parameters["W" + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * 0.01
         # dimension for bias matrix is [#neurons_in_current_layer X 1]
         parameters["b" + str(l)] = np.zeros((layer_dims[l], 1))
-        
+
     return parameters
 
+def linear_activation_forward(A_prev, W, b, activation_func):
+    # returns the activation vector of a single layer
+    #
+    # input:
+    #   - A_prev:           activation vector of previous layer
+    #   - W:                weigts vector for the current layer
+    #   - b:                bias vector for the current layer
+    #   - activation_func:  activation fnction for current layer i.e. activation.sigmoid, activation.relu, etc.
+    #
+    # output:
+    #   - A:                activation vector for current layer
+    
+    Z = np.dot(W, A_prev) + b
+    A = activation_func(Z)
 
-########## test code ###########
-l = [50, 20, 10, 5, 1]
-parameters = initialize_parameters(l)
-for i in range(1, len(l)):
-    print("W" + str(i) + ": " + str(parameters["W" + str(i)]) + "shape: " + str(parameters["W" + str(i)].shape))
-    print("b" + str(i) + ": " + str(parameters["b" + str(i)]) + "shape: " + str(parameters["b" + str(i)].shape))
-########## test code ###########
+    return A
