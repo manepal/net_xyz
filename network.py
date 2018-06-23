@@ -84,3 +84,21 @@ def forward_propagate(X, parameters, activation_funcs):
 
     AL = A
     return AL
+
+def compute_cost(AL, Y):
+    # returns the discrepancy between the expected result vs actual result
+    # input:
+    #   - AL:   activation of the final layer or the output of the network
+    #   - Y:    vector of expected output
+    #
+    # output:
+    #   - cost: aggregate discrepancy between actual vs expected result across all training examples
+    
+    # m is the number of training examples
+
+    assert(Y.shape == AL.shape)
+
+    m = Y.shape[1]
+
+    cost = -(1.0/m) * np.sum(Y * np.log(AL) + (1-Y) * np.log(1-AL))
+    return cost
