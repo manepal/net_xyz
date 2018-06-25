@@ -131,20 +131,46 @@ def compute_cost(AL, Y, cost_func = cost_default):
 
     return cost
 
-def linear_backward(dZ, A_prev):
+def linear_backward(dZ, cache):
     # returns the gradients of parameters for a single layer
     #
     # input:
     #   - dZ:       derivative of cost function w.r.t. linear output 'Z'
-    #   - A_prev:   activation vector of previous layer
+    #   - cache:    [linear cache] tuple of containing (A_prev, W, b) in the current layer
     #
     # output:
+    #   - dA_prev:  partial derivative of cost w.r.t. activation of previous layer(l-1)
     #   - dW:       vector of partial derivatives of cost w.r.t. W
     #   - db:       vector of partial derivatives of cost w.r.t. W
 
+    A_prev, W, b = cache
     # retrieve the no. of training examples
     m = A_prev.shape[1]
+
     dW = (1.0/m) * np.dot(dZ, A_prev.T)
     db = (1.0/m) * np.sum(dZ, axis=1, keepdims=True)
+    dA_prev = np.dot(W.T, dZ)
 
-    return dW, db
+    return dA_prev, dW, db
+
+def linear_activation_backward(dA, cache, activation_func_backward):
+    # returns the backward linear->activation output for a single layer
+    #
+    # input:
+    #   - dA:                       partial derivative of cost w.r.t. activation for current layer
+    #   - cachhe:                   tuple of (linear_cache, activation cache)
+    #   - activation_func_backward: derivative of activaiton function used in the current layer
+    #
+    # output:
+    #   - dA_prev:                  partial derivative of cost w.r.t. activation for previous layer(l-1)
+    #   - dW:                       partial derivative of cost w.r.t. W for current layer
+    #   - db:                       partial derivative of cost w.r.t. b for current layer
+
+    linear_cache, activation_cache = cache
+    Z = activation_cache
+
+    # using chain rule dL/dZ = dL/dA * dA/dZ, where L is the cost function
+    dZ =  dA * activation_func_backward(Z)
+    dA_prev, dW, db = linear_backward(dZ, linear_cache)
+
+    return dA_prev, dW, db
