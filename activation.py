@@ -11,6 +11,7 @@ def sigmoid(z):
     # sigmoid function
     # output ranges form 0.0 to 1.0
     # very useful for binary classification
+    
     return 1.0 / (1.0 + np.exp(-z))
 
 def sigmoid_prime(z):

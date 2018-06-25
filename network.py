@@ -1,5 +1,6 @@
 import numpy as np
 from activation import *
+from cost import *
 
 # activations = {
 #     "sigmoid": activation.sigmoid,
@@ -33,6 +34,23 @@ def initialize_parameters(layer_dims):
 
     return parameters
 
+def linear_forward(A_prev, W, b):
+    # returns the linear output of a single layer
+    #
+    # input:
+    #   - A:        activation of previous layer
+    #   - W:        weights vector for current layer
+    #   - b:        bias vector for current layer
+    #
+    # output:
+    #   - Z:        linear output of current layer
+    #   - cache:    dictionary containing A_prev, W, b for current layer
+
+    Z = np.dot(W, A_prev) + b
+    cache = (A_prev, W, b)
+
+    return Z, cache
+
 def linear_activation_forward(A_prev, W, b, activation_func):
     # returns the activation vector of a single layer
     #
@@ -44,11 +62,15 @@ def linear_activation_forward(A_prev, W, b, activation_func):
     #
     # output:
     #   - A:                activation vector for current layer
+    #   - cache:            dictionary containing linear_cache and activation_cache
     
-    Z = np.dot(W, A_prev) + b
+    Z, linear_cache = linear_forward(A_prev, W, b)
+    activation_cache = Z
     A = activation_func(Z)
 
-    return A
+    cache = (linear_cache, activation_cache)
+
+    return A, cache
 
 def forward_propagate(X, parameters, activation_funcs):
     # calculates the activations for each layer
@@ -85,11 +107,12 @@ def forward_propagate(X, parameters, activation_funcs):
     AL = A
     return AL
 
-def compute_cost(AL, Y):
+def compute_cost(AL, Y, cost_func = cost_default):
     # returns the discrepancy between the expected result vs actual result
     # input:
-    #   - AL:   activation of the final layer or the output of the network
-    #   - Y:    vector of expected output
+    #   - AL:       activation of the final layer or the output of the network
+    #   - Y:        vector of expected output
+    #   - cost_func:cost function to use for calculating cost
     #
     # output:
     #   - cost: aggregate discrepancy between actual vs expected result across all training examples
@@ -98,16 +121,14 @@ def compute_cost(AL, Y):
 
     assert(Y.shape == AL.shape)
 
-    m = Y.shape[1]
-
-    cost = -(1.0/m) * np.sum(Y * np.log(AL) + (1-Y) * np.log(1-AL))
+    cost = cost_func(AL, Y)
     # convert cost into a scalar
     cost = np.squeeze(cost)
     assert(cost.shape == ())
 
     return cost
 
-def linear_activation_backward(dZ, A_prev):
+def linear_backward(dZ, A_prev):
     # returns the gradients of parameters for a single layer
     #
     # input:
