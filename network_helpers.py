@@ -207,3 +207,28 @@ def backward_propagate(AL, Y, caches, activation_funcs):
         grads["db"+str(l+1)] = db
 
     return grads
+
+def update_parameters(parameters, grads, learning_rate):
+    # updates the parameters by subtracting the respective gradients
+    #
+    # input:
+    #   - parameters:       dictionary containing vectors of W, b for each layer
+    #   - grads:            gradients of cost w.r.t. W, b for each layer
+    #   - learning_rate:    a smaller scalar
+    #
+    # output:
+    #   - parameters:       dictionary containing updated parameters
+
+    # compute the number of layers in network
+    L = len(parameters) // 2
+
+    for l in range(1, L+1):
+        W = parameters["W" + str(l)]
+        b = parameters["b" + str(l)]
+        dW = grads["dW" + str(l)]
+        db = grads["db" + str(1)]
+
+        parameters["W" + str(l)] = W - learning_rate * dW
+        parameters["b" + str(l)] = b - learning_rate * db
+
+    return parameters
