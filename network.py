@@ -77,13 +77,13 @@ def forward_propagate(X, parameters, activation_funcs):
     # returns the actication for the final layer
     #
     # input:
-    #   - X:            vector of training or test data, dimension: [#input_features X #training_or_test_data]
-    #   - parametest:   dictionary containing the the vectors of W, b, for each layers
-    #   - activation_funcs:  list of string denoting the activation functions for each layer [1 - L]
+    #   - X:                vector of training or test data, dimension: [#input_features X #training_or_test_data]
+    #   - parametest:       dictionary containing the the vectors of W, b, for each layers
+    #   - activation_funcs: list of string denoting the activation functions for each layer [1 - L]
     #
     # output:
-    #   - AL:           activation vector of the last layer
-    #   - caches:       list of activation caches from each layyer
+    #   - AL:               activation vector of the last layer
+    #   - caches:           list of activation caches from each layyer
 
     # calculate the number of layers in the network
     # note that num_layers = len(layer_dims) - 1
@@ -174,3 +174,36 @@ def linear_activation_backward(dA, cache, activation_func_backward):
     dA_prev, dW, db = linear_backward(dZ, linear_cache)
 
     return dA_prev, dW, db
+
+def backward_propagate(AL, Y, caches, activation_funcs):
+    # implements the back propagation for the entire network
+    # returns gradients of cost w.r.t. W, b for each layer
+    #
+    # input:
+    #   - AL:               activation for the final layer or the output fot the network
+    #   - Y:                expected result
+    #   - caches:           list containing linear_cache, activation cache for each layer
+    #   - activation_funcs: list of strings denoting the activation function used for layer 1 through L
+    #
+    # output:
+    #   - grads:            dictionary containig the partial derivatives of cost w.r.t. A, W, b for each layer
+
+    grads = {}
+    # compute number of layers
+    L = len(caches)
+    Y = Y.reshape(AL.shape)
+
+    # get the partial derivative of cost w.r.t. A
+    dAL = cost_default_prime(AL, Y)
+    dA = dAL
+
+    for l in reversed(range(L)):
+        current_cache = caches[l]
+        activation_backward = activations_backward.get(activation_funcs[l-1])
+        dA_prev, dW, db = linear_activation_backward(dA, current_cache, activation_backward)
+        dA = dA_prev
+        grads["dA"+str(l)] = dA_prev
+        grads["dW"+str(l+1)] = dW
+        grads["db"+str(l+1)] = db
+
+    return grads
