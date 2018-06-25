@@ -74,9 +74,16 @@ def leaky_relu_prime(z):
         return 0.01
 
 # dictionary containing the mapping for activation functions to their string names
-activations = {
+activations_forward = {
     "sigmoid": sigmoid,
     "tanh": tanh,
     "relu": relu,
     "leaky_relu": leaky_relu
+}
+
+activations_backward = {
+    "sigmoid": sigmoid_prime,
+    "tanh": tanh_prime,
+    "relu": relu_prime,
+    "leaky_relu": leaky_relu_prime
 }

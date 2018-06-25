@@ -78,7 +78,7 @@ def forward_propagate(X, parameters, activation_funcs):
         W = parameters["W" + str(l)]
         b = parameters["b" + str(l)]
         # retrieve activation function from the dictionary
-        activation_func = activations.get(activation_funcs[l-1])
+        activation_func = activations_forward.get(activation_funcs[l-1])
 
         A = linear_activation_forward(A, W, b, activation_func)
 
@@ -101,4 +101,26 @@ def compute_cost(AL, Y):
     m = Y.shape[1]
 
     cost = -(1.0/m) * np.sum(Y * np.log(AL) + (1-Y) * np.log(1-AL))
+    # convert cost into a scalar
+    cost = np.squeeze(cost)
+    assert(cost.shape == ())
+
     return cost
+
+def linear_activation_backward(dZ, A_prev):
+    # returns the gradients of parameters for a single layer
+    #
+    # input:
+    #   - dZ:       derivative of cost function w.r.t. linear output 'Z'
+    #   - A_prev:   activation vector of previous layer
+    #
+    # output:
+    #   - dW:       vector of partial derivatives of cost w.r.t. W
+    #   - db:       vector of partial derivatives of cost w.r.t. W
+
+    # retrieve the no. of training examples
+    m = A_prev.shape[1]
+    dW = (1.0/m) * np.dot(dZ, A_prev.T)
+    db = (1.0/m) * np.sum(dZ, axis=1, keepdims=True)
+
+    return dW, db
