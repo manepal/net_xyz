@@ -83,6 +83,7 @@ def forward_propagate(X, parameters, activation_funcs):
     #
     # output:
     #   - AL:           activation vector of the last layer
+    #   - caches:       list of activation caches from each layyer
 
     # calculate the number of layers in the network
     # note that num_layers = len(layer_dims) - 1
@@ -92,6 +93,7 @@ def forward_propagate(X, parameters, activation_funcs):
     # make sure #layers == len(activations)
     assert(L == len(activation_funcs))
 
+    caches = []
     A = X
 
     for l in range(1, L + 1):
@@ -102,10 +104,11 @@ def forward_propagate(X, parameters, activation_funcs):
         # retrieve activation function from the dictionary
         activation_func = activations_forward.get(activation_funcs[l-1])
 
-        A = linear_activation_forward(A, W, b, activation_func)
+        A, cache = linear_activation_forward(A, W, b, activation_func)
+        caches.append(cache)
 
     AL = A
-    return AL
+    return AL, caches
 
 def compute_cost(AL, Y, cost_func = cost_default):
     # returns the discrepancy between the expected result vs actual result
