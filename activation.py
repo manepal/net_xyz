@@ -62,7 +62,8 @@ def relu_prime(z):
     # when z < 0, relu(z) = 0, a constant. so, derivative is 0
     # when z > 0, relu(z) = z, so derivative is 1
     
-    result = 1.0 if z > 0.0 else 0.0 # typecast boolean value to float
+    result = np.array(z, copy=True)
+    result[z <= 0.0] = 0.0
     return result
 
 def leaky_relu(z):

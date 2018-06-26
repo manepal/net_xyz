@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 layer_dims = [2, 3, 1]
 
 # length of activaiton_funcs should be [len(layer_dims) - 1] because the first layer is input layer and does not require computations
-activation_funcs = ["sigmoid", "sigmoid"]
+activation_funcs = ["tanh", "sigmoid"]
 num_iterations = 20000
 learning_rate = 0.075
 
