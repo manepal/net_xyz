@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # this is a simple program to test the deep neural network against logical gates data
 
-# our network will have 2 input layers for input features or two inputs of a logic gate
+# our network will have 2 input neurons for input features or two inputs of a logic gate
 # output layer will contain only one neuron to emulate logic gate's output
 layer_dims = [2, 3, 1]
 

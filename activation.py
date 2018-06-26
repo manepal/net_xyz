@@ -64,6 +64,7 @@ def relu_prime(z):
     
     result = np.array(z, copy=True)
     result[z <= 0.0] = 0.0
+    result[z > 0.0] = 1.0
     return result
 
 def leaky_relu(z):
@@ -84,7 +85,9 @@ def leaky_relu_prime(z):
     # when z < 0, leaky_relu(z) = 0.01*z, so, derivative is 0.01
     # when z > 0, leaky_relu(z) = z, so derivative is 1
     
-    result = 1 if z > 0.0 else 0.01 
+    result = np.array(z, copy=True)
+    result[z <= 0.0] = 0.01
+    result[z > 0.0] = 1.0
     return result
 
 # dictionary containing the mapping for activation functions to their string names

@@ -197,7 +197,8 @@ def backward_propagate(AL, Y, caches, activation_funcs):
 
     for l in reversed(range(L)):
         current_cache = caches[l]
-        activation_backward = activations_backward.get(activation_funcs[l-1])
+        # iteration starts from l = L-1
+        activation_backward = activations_backward.get(activation_funcs[l])
         dA_prev, dW, db = linear_activation_backward(dA, current_cache, activation_backward)
         dA = dA_prev
         grads["dA"+str(l)] = dA_prev
