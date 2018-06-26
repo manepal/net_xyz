@@ -120,8 +120,6 @@ def compute_cost(AL, Y, cost_func = cost_default):
     # output:
     #   - cost: aggregate discrepancy between actual vs expected result across all training examples
     
-    # m is the number of training examples
-
     assert(Y.shape == AL.shape)
 
     cost = cost_func(AL, Y)
@@ -226,7 +224,7 @@ def update_parameters(parameters, grads, learning_rate):
         W = parameters["W" + str(l)]
         b = parameters["b" + str(l)]
         dW = grads["dW" + str(l)]
-        db = grads["db" + str(1)]
+        db = grads["db" + str(l)]
 
         parameters["W" + str(l)] = W - learning_rate * dW
         parameters["b" + str(l)] = b - learning_rate * db

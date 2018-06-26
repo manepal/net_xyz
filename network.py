@@ -62,22 +62,30 @@ class DeepNeuralNetwork():
             self.parameters = update_parameters(self.parameters, grads, self.learning_rate)
 
         # finally after training has been completed, compute the final cost
-        AL = forward_propagate(X_train, self.parameters, self.activation_funcs)
+        AL, caches = forward_propagate(X_train, self.parameters, self.activation_funcs)
         final_cost = compute_cost(AL, Y_train)
 
         self.is_training_complete = True
 
         return final_cost, costs
 
-    def predict(self, X_test):
+    def predict(self, X):
         # predicts the output of the given data based on the training completed
+        #
+        # input:
+        #   - X:    input data to make predictions on
+        # output:
+        #   - AL:   activation vector of final layer
 
         if self.is_training_complete == False:
             print("Please train the network first!!!")
             return
+        
+        if X.shape[0] != self.layer_dims[0]:
+            print("number of input features does not match the number of input layers in the nerwork!!!")
+            return
 
-        AL, caches = forward_propagate(X_test, self.parameters, self.activation_funcs)
+        AL, caches = forward_propagate(X, self.parameters, self.activation_funcs)
 
         # return the activation vector of final layer
         return AL
-        
