@@ -18,6 +18,7 @@ class DeepNeuralNetwork():
         self.activation_funcs = activation_funcs
         self.num_iterations = num_iterations
         self.learning_rate = learning_rate
+        self.is_training_complete = False
 
         # initialize w, b vectors for entire network
         self.parameters = initialize_parameters(self.layer_dims)
@@ -64,4 +65,19 @@ class DeepNeuralNetwork():
         AL = forward_propagate(X_train, self.parameters, self.activation_funcs)
         final_cost = compute_cost(AL, Y_train)
 
+        self.is_training_complete = True
+
         return final_cost, costs
+
+    def predict(self, X_test):
+        # predicts the output of the given data based on the training completed
+
+        if self.is_training_complete == False:
+            print("Please train the network first!!!")
+            return
+
+        AL, caches = forward_propagate(X_test, self.parameters, self.activation_funcs)
+
+        # return the activation vector of final layer
+        return AL
+        
